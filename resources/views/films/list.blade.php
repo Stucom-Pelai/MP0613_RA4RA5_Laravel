@@ -1,30 +1,24 @@
+@extends('layouts.app')
+
+@section('title', 'Lista de Peliculas')
+
+@section('content')
 <h1>{{$title}}</h1>
-<h1>{{$counter}}</h1>
 
 @if(empty($films))
-    <FONT COLOR="red">No se ha encontrado ninguna película</FONT>
+    <div class="alert alert-danger">No se ha encontrado ninguna película</div>
 @else
-    <div align="center">
-    <table border="1">
-        <tr>
-            @foreach($films as $film)
-                @foreach(array_keys($film) as $key)
-                    <th>{{$key}}</th>
-                @endforeach
-                @break
-            @endforeach
-        </tr>
-
+    <div class="film-grid">
         @foreach($films as $film)
-            <tr>
-                <td>{{$film['name']}}</td>
-                <td>{{$film['year']}}</td>
-                <td>{{$film['genre']}}</td>
-                <td>{{$film['duration']}}</td>
-                <td>{{$film['country']}}</td>
-                <td><img src={{$film['img_url']}} style="width: 100px; heigth: 120px;" /></td>
-            </tr>
+            <div class="film-card">
+                <img src="{{$film['img_url']}}" class="film-image" alt="{{$film['title']}}">
+                <div class="film-info">
+                    <div class="film-title">{{$film['title']}}</div>
+                    <div class="film-meta">{{$film['genre']}}</div>
+                    <div class="film-meta">{{$film['year']}} &bull; {{$film['duration']}} min</div>
+                    <div class="film-meta">{{$film['country']}}</div>
+                </div>
+            </div>
         @endforeach
-    </table>
-</div>
+    </div>
 @endif

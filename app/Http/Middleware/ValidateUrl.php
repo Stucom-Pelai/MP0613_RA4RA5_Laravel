@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 
-class ValidateYear
+class ValidateUrl
 {
     /**
      * Handle an incoming request.
@@ -16,14 +16,17 @@ class ValidateYear
      */
     public function handle(Request $request, Closure $next)
     {
-        $year = $request->route('year');
+        // Obtener la URL enviada desde el formulario
+        $url = $request->input('img_url');
 
-        // in case year is not numeric go to homepage
-        if (isset($year)) {
-            if (is_null($year) || !is_numeric($year)) {
-                return redirect('/');
-            }
+        // Validar si es una URL real
+        if (!$url || !filter_var($url, FILTER_VALIDATE_URL)) {
+            // Redirige al home y pasa mensaje de error
+            return redirect('/')
+                ->with('error', 'La URL no es válida');
         }
+
+        // Si es válida, deja pasar la request
         return $next($request);
     }
 }

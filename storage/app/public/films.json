@@ -1,42 +1,50 @@
 [
     {
-        "name": "La Rosa Púrpura del Cairo",
+        "title": "La Rosa P\u00farpura del Cairo",
         "year": 1985,
         "genre": "Drama",
-        "duration" : "103",
-        "country":"españa",
-        "img_url": "https://es.web.img2.acsta.net/medias/nmedia/18/79/45/34/20253823.jpg"
+        "duration": "103",
+        "country": "espa\u00f1a",
+        "img_url": "https:\/\/es.web.img2.acsta.net\/medias\/nmedia\/18\/79\/45\/34\/20253823.jpg"
     },
     {
-        "name": "El Club de los Cinco",
+        "title": "El Club de los Cinco",
         "year": 1985,
         "genre": "Comedia",
-        "duration" : "101",
-        "country":"méxico",
-        "img_url": "https://pics.filmaffinity.com/El_club_de_los_cinco-192309838-large.jpg"
+        "duration": "101",
+        "country": "m\u00e9xico",
+        "img_url": "https:\/\/pics.filmaffinity.com\/El_club_de_los_cinco-192309838-large.jpg"
     },
     {
-        "name": "Forrest Gump",
+        "title": "Forrest Gump",
         "year": 1994,
         "genre": "Drama",
-        "duration" : "90",
-        "country":"frança",       
-        "img_url": "https://pics.filmaffinity.com/Forrest_Gump-212765827-large.jpg"
+        "duration": "90",
+        "country": "fran\u00e7a",
+        "img_url": "https:\/\/pics.filmaffinity.com\/Forrest_Gump-212765827-large.jpg"
     },
     {
-        "name": "Arrival",
+        "title": "Arrival",
         "year": 2016,
-        "genre": "Ciencia Ficción",
-        "duration" : "100",
-        "country":"portugal",
-        "img_url": "https://pics.filmaffinity.com/La_llegada-686966912-large.jpg"
+        "genre": "Ciencia Ficci\u00f3n",
+        "duration": "100",
+        "country": "portugal",
+        "img_url": "https:\/\/pics.filmaffinity.com\/La_llegada-686966912-large.jpg"
     },
     {
-        "name": "As Bestas",
+        "title": "As Bestas",
         "year": 2022,
         "genre": "Drama",
-        "duration" : "70",
-        "country":"argentina",
-        "img_url": "https://pics.filmaffinity.com/As_bestas-275688233-large.jpg"
+        "duration": "70",
+        "country": "argentina",
+        "img_url": "https:\/\/pics.filmaffinity.com\/As_bestas-275688233-large.jpg"
+    },
+    {
+        "title": "avatar",
+        "year": "2009",
+        "genre": "accion",
+        "duration": "120",
+        "country": "espa\u00f1a",
+        "img_url": "https:\/\/pics.filmaffinity.com\/Avatar-993297010-large.jpg"
     }
 ]
