@@ -1,0 +1,72 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use App\Models\Film;
+
+class FilmsSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
+    {
+        DB::table('films')->delete();
+
+        $films = [
+            [
+                "name" => "La Rosa Púrpura del Cairo",
+                "year" => 1985,
+                "genre" => "Drama",
+                "img_url" => "https://es.web.img2.acsta.net/medias/nmedia/18/79/45/34/20253823.jpg",
+                "country" => "Germany",
+                "duration" => 77,
+            ],
+            [
+                "name" => "El Club de los Cinco",
+                "year" => 1985,
+                "genre" => "Comedy",
+                "img_url" => "/storage/img/el_club_de_los_cinco.png",
+                "country" => "Brazil",
+                "duration" => 88,
+            ],
+            [
+                "name" => "Forrest Gump",
+                "year" => 1994,
+                "genre" => "Drama",
+                "img_url" => "/storage/img/forrest_gump.png",
+                "country" => "Russia",
+                "duration" => 99,
+            ],
+            [
+                "name" => "Arrival",
+                "year" => 2016,
+                "genre" => "Science Fiction",
+                "img_url" => "/storage/img/arrival.png",
+                "country" => "Sweden",
+                "duration" => 111,
+            ],
+            [
+                "name" => "As Bestas",
+                "year" => 2022,
+                "genre" => "Drama",
+                "img_url" => "/storage/img/as_bestas.png",
+                "country" => "Ukraine",
+                "duration" => 222,
+            ],
+            [
+                "name" => "Fast & Furious X",
+                "year" => 2025,
+                "genre" => "Cars",
+                "img_url" => "https://image.tmdb.org/t/p/original/lZRRxutZIXQSAq0mXNHdM7kPfBP.jpg",
+                "country" => "USA",
+                "duration" => 117,
+            ],
+        ];
+        foreach ($films as $film) {
+            Film::create($film);
+        }
+    }
+}
