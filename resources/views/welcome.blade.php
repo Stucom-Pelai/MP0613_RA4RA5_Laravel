@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Inicio')
+@section('name', 'Inicio')
 
 @section('content')
 
@@ -24,7 +24,7 @@
 <form action="{{ route('film') }}" method="POST">
     @csrf
 
-    <input type="text" name="title" placeholder="Title" required><br>
+    <input type="text" name="name" placeholder="Name" required><br>
     <input type="text" name="year" placeholder="Year" required><br>
     <input type="text" name="genre" placeholder="Genre" required><br>
     <input type="text" name="duration" placeholder="Duration" required><br>

@@ -1,6 +1,6 @@
 [
     {
-        "title": "La Rosa P\u00farpura del Cairo",
+        "name": "La Rosa P\u00farpura del Cairo",
         "year": 1985,
         "genre": "Drama",
         "duration": "103",
@@ -8,7 +8,7 @@
         "img_url": "https:\/\/es.web.img2.acsta.net\/medias\/nmedia\/18\/79\/45\/34\/20253823.jpg"
     },
     {
-        "title": "El Club de los Cinco",
+        "name": "El Club de los Cinco",
         "year": 1985,
         "genre": "Comedia",
         "duration": "101",
@@ -16,7 +16,7 @@
         "img_url": "https:\/\/pics.filmaffinity.com\/El_club_de_los_cinco-192309838-large.jpg"
     },
     {
-        "title": "Forrest Gump",
+        "name": "Forrest Gump",
         "year": 1994,
         "genre": "Drama",
         "duration": "90",
@@ -24,7 +24,7 @@
         "img_url": "https:\/\/pics.filmaffinity.com\/Forrest_Gump-212765827-large.jpg"
     },
     {
-        "title": "Arrival",
+        "name": "Arrival",
         "year": 2016,
         "genre": "Ciencia Ficci\u00f3n",
         "duration": "100",
@@ -32,7 +32,7 @@
         "img_url": "https:\/\/pics.filmaffinity.com\/La_llegada-686966912-large.jpg"
     },
     {
-        "title": "As Bestas",
+        "name": "As Bestas",
         "year": 2022,
         "genre": "Drama",
         "duration": "70",
@@ -40,7 +40,7 @@
         "img_url": "https:\/\/pics.filmaffinity.com\/As_bestas-275688233-large.jpg"
     },
     {
-        "title": "avatar",
+        "name": "avatar",
         "year": "2009",
         "genre": "accion",
         "duration": "120",
