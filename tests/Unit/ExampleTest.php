@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @author Maxime Pol Marcet
+ */
+
 namespace Tests\Unit;
 
 use PHPUnit\Framework\TestCase;

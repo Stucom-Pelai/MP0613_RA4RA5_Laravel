@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @author Maxime Pol Marcet
+ */
+
 namespace App\Http\Middleware;
 
 use Closure;

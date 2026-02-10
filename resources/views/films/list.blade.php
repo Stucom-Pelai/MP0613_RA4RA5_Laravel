@@ -1,3 +1,4 @@
+{{-- Author: Maxime Pol Marcet --}}
 @extends('layouts.master')
 
 @section('title', $title)
@@ -64,14 +65,14 @@
     <div class="text-center mb-5">
         <h1 class="mb-2">{{$title}}</h1>
         @if(!empty($films))
-            <p>Mostrando {{ count($films) }} títulos</p>
+            <p>Showing {{ count($films) }} titles</p>
         @endif
     </div>
 
     @if(empty($films))
         <div class="card-apple text-center py-5">
-            <h3 class="text-secondary">No hay películas disponibles</h3>
-            <p class="mb-0">No se ha encontrado ninguna película en la base de datos.</p>
+            <h3 class="text-secondary">No films available</h3>
+            <p class="mb-0">No films were found in the database.</p>
         </div>
     @else
         <div class="card-apple p-0 overflow-hidden">
@@ -79,12 +80,12 @@
                 <table class="table-apple">
                     <thead>
                         <tr>
-                            <th class="pl-4">Póster</th>
-                            <th>Nombre</th>
-                            <th>Año</th>
-                            <th>Género</th>
-                            <th>País</th>
-                            <th class="text-right pr-4">Duración</th>
+                            <th class="pl-4">Poster</th>
+                            <th>Name</th>
+                            <th>Year</th>
+                            <th>Genre</th>
+                            <th>Country</th>
+                            <th class="text-right pr-4">Duration</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -114,6 +115,6 @@
     @endif
 
     <div class="text-center mt-5">
-        <a href="/" class="btn-apple">← Volver al Inicio</a>
+        <a href="/" class="btn-apple">← Back to Home</a>
     </div>
 @endsection

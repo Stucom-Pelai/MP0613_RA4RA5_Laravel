@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @author Maxime Pol Marcet
+ */
+
 namespace Tests\Feature;
 
 // use Illuminate\Foundation\Testing\RefreshDatabase;
