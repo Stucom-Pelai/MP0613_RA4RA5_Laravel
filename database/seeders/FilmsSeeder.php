@@ -1,20 +1,29 @@
 <?php
 
+/**
+ * @author Maxime Pol Marcet
+ */
+
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use App\Models\Film;
 
+/**
+ * NFR1: Seeder for the films table in the cinema database.
+ * I seed the table with dummy data for testing.
+ */
 class FilmsSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * I run the seeder: I empty the films table and create six test films.
      */
     public function run(): void
     {
         DB::table('films')->delete();
 
+        // I define the list of films that I insert as test data.
         $films = [
             [
                 "name" => "La Rosa Púrpura del Cairo",
@@ -65,8 +74,11 @@ class FilmsSeeder extends Seeder
                 "duration" => 117,
             ],
         ];
+
         foreach ($films as $film) {
             Film::create($film);
         }
+
+        $this->command->info('Films table filled with test data (NFR1).');
     }
 }

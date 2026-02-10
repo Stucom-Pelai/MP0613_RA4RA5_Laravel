@@ -1,183 +1,143 @@
 <?php
 
+/**
+ * @author Maxime Pol Marcet
+ */
+
 namespace App\Http\Controllers;
 
+use App\Models\Film;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
+/**
+ * Film controller. I use the cinema database (films table) via the Film model.
+ */
 class FilmController extends Controller
 {
     /**
-     * Read films from storage
+     * I fetch all films from the cinema database (films table).
      */
-    public static function readFilms(): array
+    public static function readFilms()
     {
-        // He creado esta función para no repetir código al leer el JSON.
-        // Se lee el JSON desde storage/app/public/films.json
-        if (Storage::exists('public/films.json')) {
-            $json = Storage::get('public/films.json');
-            return json_decode($json, true) ?? [];
-        }
-        return [];
+        return Film::all();
     }
 
     /**
-     * List all films
+     * I list all films ordered by year descending and return the films.list view.
      */
     public function listFilms()
     {
-        $title = "Todas las Películas";
-        $films = FilmController::readFilms();
+        $title = "All Films";
+        $films = Film::orderBy('year', 'desc')->get();
         return view("films.list", ["films" => $films, "title" => $title]);
     }
 
+    /**
+     * I list films with year before the given one (default 2000) and return the films.list view.
+     */
     public function listOldFilms($year = null)
     {
-        $old_films = [];
-        if (is_null($year))
+        if (is_null($year)) {
             $year = 2000;
-        $title = "Películas Clásicas (Antes de $year)";
-        $films = FilmController::readFilms();
-
-        foreach ($films as $film) {
-            if ($film['year'] < $year)
-                $old_films[] = $film;
         }
-        return view('films.list', ["films" => $old_films, "title" => $title]);
+        $title = "Classic Films (Before $year)";
+        $films = Film::where('year', '<', $year)->orderBy('year', 'desc')->get();
+        return view('films.list', ["films" => $films, "title" => $title]);
     }
 
+    /**
+     * I list films with year equal to or after the given one (default 2000) and return the films.list view.
+     */
     public function listNewFilms($year = null)
     {
-        $new_films = [];
-        if (is_null($year))
+        if (is_null($year)) {
             $year = 2000;
-        $title = "Nuevos Lanzamientos (Desde $year)";
-        $films = FilmController::readFilms();
-
-        foreach ($films as $film) {
-            if ($film['year'] >= $year)
-                $new_films[] = $film;
         }
-        return view('films.list', ["films" => $new_films, "title" => $title]);
+        $title = "New Releases (From $year)";
+        $films = Film::where('year', '>=', $year)->orderBy('year', 'desc')->get();
+        return view('films.list', ["films" => $films, "title" => $title]);
     }
 
+    /**
+     * I list films for the given year, ordered by name, and return the films.list view.
+     */
     public function listFilmsByYear($year)
     {
-        $films_filtered = [];
-        $title = "Películas del Año: $year";
-        $films = FilmController::readFilms();
-        foreach ($films as $film) {
-            if ($film['year'] == $year)
-                $films_filtered[] = $film;
-        }
-        return view("films.list", ["films" => $films_filtered, "title" => $title]);
-    }
-
-    public function listFilmsByGenre($genre)
-    {
-        $films_filtered = [];
-        $title = "Género: $genre";
-        $films = FilmController::readFilms();
-        foreach ($films as $film) {
-            if (strtolower($film['genre']) == strtolower($genre))
-                $films_filtered[] = $film;
-        }
-        return view("films.list", ["films" => $films_filtered, "title" => $title]);
-    }
-
-    public function sortFilms()
-    {
-        $title = "Películas por Año (Orden Cronológico)";
-        $films = FilmController::readFilms();
-        usort($films, function ($a, $b) {
-            return $b['year'] - $a['year'];
-        });
+        $title = "Films of $year";
+        $films = Film::where('year', $year)->orderBy('name')->get();
         return view("films.list", ["films" => $films, "title" => $title]);
     }
 
+    /**
+     * I list films for the given genre (case-insensitive comparison) and return the films.list view.
+     */
+    public function listFilmsByGenre($genre)
+    {
+        $title = "Genre: $genre";
+        $films = Film::whereRaw('LOWER(genre) = ?', [strtolower($genre)])->orderBy('year', 'desc')->get();
+        return view("films.list", ["films" => $films, "title" => $title]);
+    }
+
+    /**
+     * I list all films ordered by year descending (chronological) and return the films.list view.
+     */
+    public function sortFilms()
+    {
+        $title = "Films by Year (Chronological Order)";
+        $films = Film::orderBy('year', 'desc')->get();
+        return view("films.list", ["films" => $films, "title" => $title]);
+    }
+
+    /**
+     * I get the total number of films and return the films.count view.
+     */
     public function countFilms()
     {
-        $title = "Contador de Películas";
-        $films = FilmController::readFilms();
-        $count = count($films);
-        // Apuntamos a films.count (resources/views/films/count.blade.php)
+        $title = "Film Count";
+        $count = Film::count();
         return view("films.count", ["count" => $count, "title" => $title]);
     }
 
     /**
-     * Diagram Step: createFilm()
-     * Handles the creation of a new film following the rigorous sequence diagram.
+     * I handle creating a new film in the cinema database: validate, check it does not exist by name, and create the record.
      */
     public function createFilm(Request $request)
     {
-        // 1. Diagram Flow: FilmController -> isFilm()
-        // Primero recojo el nombre enviado por el formulario.
         $name = $request->input('name');
-        // Y llamo a mi función auxiliar isFilm() para ver si ya la tenemos.
         $exists = $this->isFilm($name);
 
-        // 2. Diagram Flow: if film exists -> welcome(error)
-        // Si la película ya existe, lo siento pero devuelvo al usuario al inicio con un error, como marca el diagrama.
         if ($exists) {
             return redirect('/')
-                ->withErrors(['name' => 'Error: Esta película ya existe.'])
+                ->withErrors(['name' => 'Error: This film already exists.'])
                 ->withInput();
         }
 
-        // Validation (Auxiliary step to ensure data integrity)
-        // Por seguridad, valido también el resto de campos aquí en el controlador.
         $request->validate([
-            'name' => 'required',
+            'name' => 'required|string|max:100',
             'year' => 'required|numeric',
-            'genre' => 'required',
-            'img_url' => 'required',
-            'country' => 'required',
+            'genre' => 'required|string|max:50',
+            'img_url' => 'required|string|max:255',
+            'country' => 'required|string|max:30',
             'duration' => 'required|numeric'
         ]);
 
-        // 3. Diagram Flow: if film does not exist -> Storage:put
-        // Si todo está bien, leo las pelis actuales...
-        $films = FilmController::readFilms();
+        Film::create([
+            'name' => $request->input('name'),
+            'year' => (int) $request->input('year'),
+            'genre' => $request->input('genre'),
+            'img_url' => $request->input('img_url'),
+            'country' => $request->input('country'),
+            'duration' => (int) $request->input('duration'),
+        ]);
 
-        // Creo el array de la nueva película...
-        $newFilm = [
-            "name" => $request->input('name'),
-            "year" => (int) $request->input('year'),
-            "genre" => $request->input('genre'),
-            "img_url" => $request->input('img_url'),
-            "country" => $request->input('country'),
-            "duration" => (int) $request->input('duration')
-        ];
-
-        // La añado al array de películas...
-        $films[] = $newFilm;
-
-        // Writing to storage (films.json)
-        // Y guardo todo el array actualizado en el JSON.
-        Storage::put('public/films.json', json_encode($films, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
-
-        // 4. Diagram Flow: listFilms() -> list
-        // Finalmente muestro el listado con la nueva inclusión.
         return $this->listFilms();
     }
 
     /**
-     * Diagram Step: isFilm() : bool
-     * Checks if the film already exists in storage.
+     * I check whether a film with the given name already exists in the database (case-insensitive comparison).
      */
     public function isFilm($name): bool
     {
-        // Diagram Flow: readFilms() -> Storage:json -> films[]
-        // Aquí recorro todas las películas para comparar los nombres.
-        $films = FilmController::readFilms();
-
-        foreach ($films as $film) {
-            // Uso strtolower para que no importe si escriben en mayúsculas o minúsculas.
-            if (strtolower($film['name']) === strtolower($name)) {
-                return true;
-            }
-        }
-
-        return false;
+        return Film::whereRaw('LOWER(name) = ?', [strtolower($name)])->exists();
     }
 }
