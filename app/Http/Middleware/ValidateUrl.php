@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @author Maxime Pol Marcet
+ */
+
 namespace App\Http\Middleware;
 
 use Closure;
@@ -17,15 +21,15 @@ class ValidateUrl
     public function handle(Request $request, Closure $next)
     {
         // Diagram Flow: validateUrl()
-        // Aquí compruebo si me llega una URL de imagen.
+        // I check whether an image URL is present in the request.
         if ($request->has('img_url')) {
             $url = $request->input('img_url');
 
             // Diagram Flow: if url invalid -> welcome(error)
-            // Si la URL no tiene un formato válido, redirijo al usuario al inicio ('/') y le mando un mensaje de error.
+            // If the URL is not valid, I redirect to home ('/') and attach an error message.
             if (!filter_var($url, FILTER_VALIDATE_URL)) {
                 return redirect('/')
-                    ->withErrors(['img_url' => 'Error: La URL proporcionada no es válida.'])
+                    ->withErrors(['img_url' => 'Error: The provided URL is not valid.'])
                     ->withInput();
             }
         }

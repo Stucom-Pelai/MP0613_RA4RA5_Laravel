@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @author Maxime Pol Marcet
+ */
+
 namespace App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
@@ -50,8 +54,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
 
-        // REGISTRO DEL MIDDLEWARE
-        // Aquí he registrado mi clase ValidateUrl con el alias 'validateUrl' para poder usarla en las rutas (web.php).
+        // I register the ValidateUrl middleware with the alias 'validateUrl' so it can be used in routes (web.php).
         'validateUrl' => \App\Http\Middleware\ValidateUrl::class,
     ];
 }
