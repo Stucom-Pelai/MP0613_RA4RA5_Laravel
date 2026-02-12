@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @author Maxime Pol Marcet
+ */
+
 use Illuminate\Support\Facades\Facade;
 
 return [
