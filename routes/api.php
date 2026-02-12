@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @author Maxime Pol Marcet
+ */
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
