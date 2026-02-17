@@ -143,6 +143,10 @@ class FilmController extends Controller
     {
         $film = $request->only(['name', 'year', 'genre', 'duration', 'country', 'img_url']);
 
+        if (!isset($film['year']) || !is_numeric($film['year']) || $film['year'] < 1900 || $film['year'] > 2024) {
+            return view('welcome', ['error' => 'El año debe estar entre 1900 y 2024']);
+        }
+
         if (FilmController::isFilm($film)) {
             return view('welcome', ['error' => 'This film already exists']);
         }
