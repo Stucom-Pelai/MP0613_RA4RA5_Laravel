@@ -4,25 +4,24 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Actor;
+use App\Models\Film;
 
 
-class Film extends Model
+class Actor extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'name',
-        'year',
-        'genre',
+        'surname',
+        'birthdate',
         'country',
-        'duration',
         'img_url',
     ];
 
-    public function actors()
-    {
-        return $this->belongsToMany(Actor::class, 'film_actor');
-    }
 
+    public function films()
+    {
+        return $this->belongsToMany(Film::class, 'film_actor');
+    }
 }
