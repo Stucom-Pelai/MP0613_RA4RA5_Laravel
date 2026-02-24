@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
+use App\Models\Film;
 
 class FilmController extends Controller
 {
@@ -11,7 +12,10 @@ class FilmController extends Controller
      */
     public static function readFilms(): array
     {
-        $films = Storage::json('public/films.json');
+        $films = Film::all();
+
+        dd($films);
+
         return $films;
     }
 
@@ -142,6 +146,10 @@ class FilmController extends Controller
     public function createFilm(Request $request)
     {
         $film = $request->only(['name', 'year', 'genre', 'duration', 'country', 'img_url']);
+
+        if (!isset($film['year']) || !is_numeric($film['year']) || $film['year'] < 1900 || $film['year'] > 2024) {
+            return view('welcome', ['error' => 'El año debe estar entre 1900 y 2024']);
+        }
 
         if (FilmController::isFilm($film)) {
             return view('welcome', ['error' => 'This film already exists']);
