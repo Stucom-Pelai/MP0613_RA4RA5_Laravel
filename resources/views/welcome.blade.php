@@ -19,7 +19,9 @@
     <li><a href="/filmout/filmsGenre">Peliculas por genero</a></li>
     <li><a href="/filmout/filmsYear">Peliculas por año</a></li>
     <li><a href="/filmout/sortFilms">Ordenar Peliculas</a></li>
+    <li><a href="/actorout/actors">Actores</a></li>
 </ul>
+
 
 <form action="{{ route('film') }}" method="POST">
     @csrf
