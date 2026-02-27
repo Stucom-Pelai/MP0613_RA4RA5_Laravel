@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\FilmController;
+use App\Http\Controllers\ActorController;
 use App\Http\Middleware\ValidateYear;
 use App\Http\Middleware\ValidateUrl;
 use Illuminate\Support\Facades\Route;
@@ -41,4 +42,9 @@ Route::middleware('ValidateUrl')->group(function () {
         // Routes included with prefix "filmIn"
         Route::post('film/', [FilmController::class, "createFilm"])->name('film');
     });
+});
+
+Route::group(['prefix' => 'actorout'], function () {
+    // Routes included with prefix "actorout"
+    Route::get('actors/', [ActorController::class, "readActors"])->name('actors');
 });
