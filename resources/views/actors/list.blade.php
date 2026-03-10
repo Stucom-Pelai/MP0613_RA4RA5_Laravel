@@ -5,7 +5,7 @@
 @section('content')
 <h1>{{$name}}</h1>
 
-@if(empty($actors))
+@if($actors->isEmpty())
     <div class="alert alert-danger">No se han encontrado actores</div>
 @else
     <div class="film-grid">

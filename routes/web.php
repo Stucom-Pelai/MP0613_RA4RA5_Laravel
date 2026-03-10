@@ -47,4 +47,5 @@ Route::middleware('ValidateUrl')->group(function () {
 Route::group(['prefix' => 'actorout'], function () {
     // Routes included with prefix "actorout"
     Route::get('actors/', [ActorController::class, "readActors"])->name('actors');
+    Route::get('actorsByDecade/{decade?}', [ActorController::class, "readActorsByDecade"])->name('actorsByDecade');
 });

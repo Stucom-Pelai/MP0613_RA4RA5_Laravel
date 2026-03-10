@@ -20,6 +20,19 @@
     <li><a href="/filmout/filmsYear">Peliculas por año</a></li>
     <li><a href="/filmout/sortFilms">Ordenar Peliculas</a></li>
     <li><a href="/actorout/actors">Actores</a></li>
+    <li>Buscar actores por criterio
+        <form action="{{ route('actorsByDecade') }}" method="GET" class="d-inline-block">
+            <select name="decade" id="decade" class="form-control d-inline-block w-auto">
+                <option value="">Selecciona una decada</option>
+                <option value="1980">1980-1989</option>
+                <option value="1990">1990-1999</option>
+                <option value="2000">2000-2009</option>
+                <option value="2010">2010-2019</option>
+                <option value="2020">2020-2029</option>
+            </select>
+            <button type="submit" class="btn btn-primary ml-2">Buscar</button>
+        </form>
+    </li>
 </ul>
 
 
