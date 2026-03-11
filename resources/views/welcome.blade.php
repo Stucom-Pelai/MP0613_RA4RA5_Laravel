@@ -17,6 +17,12 @@
         </div>
     </div>
 
+    @if(session('database_error'))
+        <div class="alert alert-warning text-center mx-auto mb-4" style="max-width: 600px; border-radius: var(--radius-default);">
+            {{ session('database_error') }}
+        </div>
+    @endif
+
     <div class="row justify-content-center">
         <!-- Navigation Menu -->
         <div class="col-md-8 mb-5">

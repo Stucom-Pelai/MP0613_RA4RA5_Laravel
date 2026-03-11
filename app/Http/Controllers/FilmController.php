@@ -7,6 +7,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Film;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 /**
@@ -14,6 +15,22 @@ use Illuminate\Http\Request;
  */
 class FilmController extends Controller
 {
+    /**
+     * Run a database query; on connection failure redirect to home with a friendly message.
+     */
+    private function handleDatabaseQuery(callable $callback): mixed
+    {
+        try {
+            return $callback();
+        } catch (\Throwable $e) {
+            report($e);
+            return redirect('/')->with(
+                'database_error',
+                'Database is temporarily unavailable. Please start MySQL (e.g. from XAMPP) and try again.'
+            );
+        }
+    }
+
     /**
      * I fetch all films from the cinema database (films table).
      */
@@ -27,35 +44,41 @@ class FilmController extends Controller
      */
     public function listFilms()
     {
-        $title = "All Films";
-        $films = Film::orderBy('year', 'desc')->get();
-        return view("films.list", ["films" => $films, "title" => $title]);
+        return $this->handleDatabaseQuery(function () {
+            $title = "All Films";
+            $films = Film::orderBy('year', 'desc')->get();
+            return view("films.list", ["films" => $films, "title" => $title]);
+        });
     }
 
     /**
      * I list films with year before the given one (default 2000) and return the films.list view.
      */
-    public function listOldFilms($year = null)
+    public function listOldFilms(int|string|null $year = null)
     {
         if (is_null($year)) {
             $year = 2000;
         }
-        $title = "Classic Films (Before $year)";
-        $films = Film::where('year', '<', $year)->orderBy('year', 'desc')->get();
-        return view('films.list', ["films" => $films, "title" => $title]);
+        return $this->handleDatabaseQuery(function () use ($year) {
+            $title = "Classic Films (Before $year)";
+            $films = Film::where('year', '<', $year)->orderBy('year', 'desc')->get();
+            return view('films.list', ["films" => $films, "title" => $title]);
+        });
     }
 
     /**
      * I list films with year equal to or after the given one (default 2000) and return the films.list view.
      */
-    public function listNewFilms($year = null)
+    public function listNewFilms(int|string|null $year = null)
     {
         if (is_null($year)) {
             $year = 2000;
         }
-        $title = "New Releases (From $year)";
-        $films = Film::where('year', '>=', $year)->orderBy('year', 'desc')->get();
-        return view('films.list', ["films" => $films, "title" => $title]);
+        return $this->handleDatabaseQuery(function () use ($year) {
+            $title = "New Releases (From $year)";
+            $films = Film::where('year', '>=', $year)->orderBy('year', 'desc')->get();
+            return view('films.list', ["films" => $films, "title" => $title]);
+        });
     }
 
     /**
@@ -63,9 +86,11 @@ class FilmController extends Controller
      */
     public function listFilmsByYear($year)
     {
-        $title = "Films of $year";
-        $films = Film::where('year', $year)->orderBy('name')->get();
-        return view("films.list", ["films" => $films, "title" => $title]);
+        return $this->handleDatabaseQuery(function () use ($year) {
+            $title = "Films of $year";
+            $films = Film::where('year', $year)->orderBy('name')->get();
+            return view("films.list", ["films" => $films, "title" => $title]);
+        });
     }
 
     /**
@@ -73,9 +98,11 @@ class FilmController extends Controller
      */
     public function listFilmsByGenre($genre)
     {
-        $title = "Genre: $genre";
-        $films = Film::whereRaw('LOWER(genre) = ?', [strtolower($genre)])->orderBy('year', 'desc')->get();
-        return view("films.list", ["films" => $films, "title" => $title]);
+        return $this->handleDatabaseQuery(function () use ($genre) {
+            $title = "Genre: $genre";
+            $films = Film::whereRaw('LOWER(genre) = ?', [strtolower($genre)])->orderBy('year', 'desc')->get();
+            return view("films.list", ["films" => $films, "title" => $title]);
+        });
     }
 
     /**
@@ -83,9 +110,11 @@ class FilmController extends Controller
      */
     public function sortFilms()
     {
-        $title = "Films by Year (Chronological Order)";
-        $films = Film::orderBy('year', 'desc')->get();
-        return view("films.list", ["films" => $films, "title" => $title]);
+        return $this->handleDatabaseQuery(function () {
+            $title = "Films by Year (Chronological Order)";
+            $films = Film::orderBy('year', 'desc')->get();
+            return view("films.list", ["films" => $films, "title" => $title]);
+        });
     }
 
     /**
@@ -93,9 +122,23 @@ class FilmController extends Controller
      */
     public function countFilms()
     {
-        $title = "Film Count";
-        $count = Film::count();
-        return view("films.count", ["count" => $count, "title" => $title]);
+        return $this->handleDatabaseQuery(function () {
+            $title = "Film Count";
+            $count = Film::count();
+            return view("films.count", ["count" => $count, "title" => $title]);
+        });
+    }
+
+    /**
+     * I return all films as JSON (dump for debugging or API use).
+     */
+    public function showFilmsDump(): JsonResponse|\Illuminate\Http\RedirectResponse
+    {
+        $result = $this->handleDatabaseQuery(function () {
+            return response()->json(Film::orderBy('year', 'desc')->get());
+        });
+
+        return $result instanceof JsonResponse ? $result : $result;
     }
 
     /**
@@ -103,32 +146,34 @@ class FilmController extends Controller
      */
     public function createFilm(Request $request)
     {
-        $name = $request->input('name');
-        $exists = $this->isFilm($name);
-
-        if ($exists) {
-            return redirect('/')
-                ->withErrors(['name' => 'Error: This film already exists.'])
-                ->withInput();
-        }
-
         $request->validate([
             'name' => 'required|string|max:100',
             'year' => 'required|numeric',
             'genre' => 'required|string|max:50',
             'img_url' => 'required|string|max:255',
             'country' => 'required|string|max:30',
-            'duration' => 'required|numeric'
+            'duration' => 'required|numeric',
         ]);
 
-        Film::create([
-            'name' => $request->input('name'),
-            'year' => (int) $request->input('year'),
-            'genre' => $request->input('genre'),
-            'img_url' => $request->input('img_url'),
-            'country' => $request->input('country'),
-            'duration' => (int) $request->input('duration'),
-        ]);
+        try {
+            if ($this->isFilm($request->input('name'))) {
+                return redirect('/')
+                    ->withErrors(['name' => 'Error: This film already exists.'])
+                    ->withInput();
+            }
+
+            Film::create([
+                'name' => $request->input('name'),
+                'year' => (int) $request->input('year'),
+                'genre' => $request->input('genre'),
+                'img_url' => $request->input('img_url'),
+                'country' => $request->input('country'),
+                'duration' => (int) $request->input('duration'),
+            ]);
+        } catch (\Throwable $e) {
+            report($e);
+            return redirect('/')->with('database_error', 'Database is temporarily unavailable. Please start MySQL (e.g. from XAMPP) and try again.')->withInput();
+        }
 
         return $this->listFilms();
     }

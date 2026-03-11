@@ -1,6 +1,6 @@
 {{-- Author: Maxime Pol Marcet --}}
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -219,7 +219,7 @@
             </div>
             <div class="copyright-text"
                 style="background: #f5f5f7; padding: 20px 0; text-align: center; color: #86868b; font-size: 12px; border-top: 1px solid #d2d2d7;">
-                Copyright © 2026 Laravel Films by Maxime Pol Marcet. Todos los derechos reservados.
+                Copyright © 2026 Laravel Films by Maxime Pol Marcet. All rights reserved.
             </div>
         </div>
     </footer>
