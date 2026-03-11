@@ -56,5 +56,6 @@ class Kernel extends HttpKernel
 
         // I register the ValidateUrl middleware with the alias 'validateUrl' so it can be used in routes (web.php).
         'validateUrl' => \App\Http\Middleware\ValidateUrl::class,
+        'validateYear' => \App\Http\Middleware\ValidateYear::class,
     ];
 }
