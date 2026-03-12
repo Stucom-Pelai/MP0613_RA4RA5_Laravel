@@ -33,8 +33,9 @@ class CinemaDatabaseTest extends TestCase
         $database = config('database.connections.' . $connection . '.database');
         $this->assertNotNull($database, 'Database name must be configured (e.g. :memory: in tests).');
 
-        $this->assertTrue(
-            DB::connection()->getPdo() instanceof \PDO,
+        $this->assertInstanceOf(
+            \PDO::class,
+            DB::connection()->getPdo(),
             'A PDO connection to the database must be established.'
         );
     }

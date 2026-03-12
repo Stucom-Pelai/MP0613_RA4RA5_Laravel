@@ -3,6 +3,11 @@
 
 define('LARAVEL_START', microtime(true));
 
+// Ocultar avisos Deprecated en PHP 8.4+ (vendor no compatible aún) para consola legible al usar artisan serve
+if (PHP_VERSION_ID >= 80400) {
+    error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
+}
+
 /*
 |--------------------------------------------------------------------------
 | Register The Auto Loader
