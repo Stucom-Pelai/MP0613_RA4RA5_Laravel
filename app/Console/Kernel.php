@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @author Maxime Pol Marcet
+ */
+
 namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
