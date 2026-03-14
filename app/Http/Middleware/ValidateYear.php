@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @author Maxime Pol Marcet
+ */
+
 namespace App\Http\Middleware;
 
 use Closure;
@@ -18,12 +22,10 @@ class ValidateYear
     {
         $year = $request->route('year');
 
-        // in case year is not numeric go to homepage
-        if(isset($year)){
-            if(is_null($year) || !is_numeric($year)){
-                  return redirect('/');
-            }
+        if (isset($year) && (is_null($year) || !is_numeric($year))) {
+            return redirect('/');
         }
-        return $next($request);        
+
+        return $next($request);
     }
 }
