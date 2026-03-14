@@ -1,6 +1,13 @@
 <?php
 
 /**
+ * Actor model (Eloquent ORM).
+ *
+ * This file was introduced so that the application no longer relies on JSON-based
+ * data handling. The Actor entity is represented as an Eloquent model mapping to
+ * the actors table, ensuring a consistent and maintainable data layer for all
+ * future features (NFR2, Issue #10).
+ *
  * @author Maxime Pol Marcet
  */
 
@@ -10,16 +17,18 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Cinema practice – Actor model (NFR2).
- * I represent an actor in the cinema database. I use the actors table and maintain
- * the many-to-many relationship with Film through the films_actors pivot table.
+ * The Actor model is used to represent a single row in the actors table.
+ * Eloquent conventions are followed: the table name is inferred as the plural
+ * form of the class name (actors), matching the migration-backed table.
  */
 class Actor extends Model
 {
     use HasFactory;
 
     /**
-     * Attributes that I allow for mass assignment when creating or updating an actor.
+     * These attributes are marked as fillable so that mass assignment is allowed
+     * when creating or updating records via Eloquent or factories, while keeping
+     * the model secure against arbitrary input.
      */
     protected $fillable = [
         'name',
@@ -30,17 +39,22 @@ class Actor extends Model
     ];
 
     /**
-     * I cast birthdate as a date (YYYY-MM-DD format).
+     * The birthdate attribute is cast to a date so that it is always returned
+     * as a Carbon instance and stored in YYYY-MM-DD format, matching the
+     * database column type and avoiding manual parsing in the application.
      */
     protected $casts = [
         'birthdate' => 'date',
     ];
 
     /**
-     * I return the relationship with the films this actor has participated in (many-to-many via films_actors).
+     * The many-to-many relationship with Film is defined via the films_actors
+     * pivot table. withTimestamps() is used because the pivot table has
+     * created_at and updated_at columns that must be maintained by Eloquent.
      */
     public function films()
     {
-        return $this->belongsToMany(Film::class, 'films_actors');
+        return $this->belongsToMany(Film::class, 'films_actors')
+            ->withTimestamps();
     }
 }

@@ -1,6 +1,16 @@
 <?php
 
 /**
+ * Main application database seeder.
+ *
+ * The cinema seeders (FilmFakerSeeder, ActorFakerSeeder, FilmActorSeeder) are
+ * invoked in a fixed order so that the films and actors tables are filled via
+ * factories first, and the films_actors pivot table is then populated using
+ * Eloquent relationships. This order is required because the pivot table
+ * depends on existing film and actor ids. No JSON-based or file-based seeding
+ * is used; all data is generated through Eloquent models and factories
+ * (Issue #10).
+ *
  * @author Maxime Pol Marcet
  */
 
@@ -10,15 +20,19 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 
 /**
- * Cinema practice – Main application seeder.
- * I call the cinema seeders in this order: FilmFakerSeeder, ActorFakerSeeder, FilmActorSeeder,
- * so that the films, actors and films_actors tables are filled consistently.
+ * DatabaseSeeder is the entry point for php artisan db:seed. The cinema
+ * seeders are called in sequence so that foreign key constraints are
+ * satisfied and the database is left in a consistent state.
  */
 class DatabaseSeeder extends Seeder
 {
     /**
-     * I run the seeders: first FilmFakerSeeder (10 films with Faker), then ActorFakerSeeder (10 actors with Faker),
-     * and finally FilmActorSeeder (random 1-to-3 actors per film and on delete cascade verification).
+     * FilmFakerSeeder is run first so that 10 films are created via the
+     * Film factory. ActorFakerSeeder is run second so that 10 actors are
+     * created via the Actor factory. FilmActorSeeder is run last so that
+     * the films_actors pivot table is filled using the Film–Actor
+     * relationship. This order ensures that the database can be seeded
+     * successfully using factories only.
      *
      * @return void
      */

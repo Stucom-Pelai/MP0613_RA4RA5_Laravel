@@ -13,7 +13,10 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-// Welcome route (home page with form); I pass db name and film/actor counts to the view.
+// Welcome route (home page with form). The database name and film/actor counts are passed to the view.
+// Counts are obtained via the Eloquent models (Film::count(), Actor::count()) so that no JSON or
+// file-based data is used; if the database is unavailable, the counts are left at zero and the
+// page is still rendered (Issue #10).
 Route::get('/', function () {
     $connection = config('database.default');
     $dbName = config('database.connections.' . $connection . '.database');
@@ -23,7 +26,6 @@ Route::get('/', function () {
         $filmCount = \App\Models\Film::count();
         $actorCount = \App\Models\Actor::count();
     } catch (\Throwable $e) {
-        // If the database is not ready or an error occurs (e.g. PHP 8.5 + vendor), the home page still loads
         report($e);
     }
     return view('welcome', [

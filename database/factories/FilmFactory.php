@@ -1,6 +1,13 @@
 <?php
 
 /**
+ * Film factory for database seeding and testing.
+ *
+ * This factory was introduced so that films can be generated in a clean and
+ * maintainable way using Faker, instead of hardcoded or JSON-based data. It is
+ * used by FilmFakerSeeder and FilmsSeeder to populate the films table, ensuring
+ * that all future features are built on a consistent data layer (Issue #10).
+ *
  * @author Maxime Pol Marcet
  */
 
@@ -11,8 +18,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 /**
- * Cinema practice – Factory for the Film model.
- * I use this factory in FilmFakerSeeder to generate 10 films with Faker (technical design).
+ * The FilmFactory is bound to the Film model so that Laravel can resolve the
+ * correct model when factory() is called on the Film class.
  *
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Film>
  */
@@ -21,8 +28,11 @@ class FilmFactory extends Factory
     protected $model = Film::class;
 
     /**
-     * I define the default state of the model: I respect the films table column lengths
-     * (name 100, genre 50, country 30, img_url 255) and I generate random data with Faker.
+     * The default attribute set for a new Film is defined here. Column lengths
+     * from the films migration (name 100, genre 50, country 30, img_url 255)
+     * are respected via Str::limit() so that no database errors are caused by
+     * oversized values. Faker is used so that each seeded record is varied and
+     * realistic for testing.
      *
      * @return array<string, mixed>
      */
@@ -32,12 +42,12 @@ class FilmFactory extends Factory
         $countries = ['USA', 'Spain', 'France', 'Germany', 'UK', 'Italy', 'Japan', 'Brazil'];
 
         return [
-            'name' => Str::limit(fake()->words(3, true), 100),
-            'year' => fake()->numberBetween(1980, 2025),
-            'genre' => Str::limit(fake()->randomElement($genres), 50),
-            'country' => Str::limit(fake()->randomElement($countries), 30),
-            'duration' => fake()->numberBetween(60, 180),
-            'img_url' => Str::limit(fake()->imageUrl(640, 480), 255),
+            'name' => Str::limit($this->faker->words(3, true), 100),
+            'year' => $this->faker->numberBetween(1980, 2025),
+            'genre' => Str::limit($this->faker->randomElement($genres), 50),
+            'country' => Str::limit($this->faker->randomElement($countries), 30),
+            'duration' => $this->faker->numberBetween(60, 180),
+            'img_url' => Str::limit($this->faker->imageUrl(640, 480), 255),
         ];
     }
 }

@@ -1,6 +1,13 @@
 <?php
 
 /**
+ * Actor Faker seeder – seeds the actors table using the Actor factory.
+ *
+ * This seeder was updated to use the new ActorFactory instead of any JSON or
+ * hardcoded data. The actors table is populated with exactly 10 records via
+ * Actor::factory()->count(10)->create(), so that database seeding is clean,
+ * maintainable and consistent with the Eloquent ORM structure (Issue #10).
+ *
  * @author Maxime Pol Marcet
  */
 
@@ -10,17 +17,20 @@ use App\Models\Actor;
 use Illuminate\Database\Seeder;
 
 /**
- * Cinema practice – ActorFakerSeeder (technical design).
- * I seed the actors table with 10 actors generated with Faker via Actor::factory.
+ * ActorFakerSeeder is invoked by DatabaseSeeder so that the actors table is
+ * filled before FilmActorSeeder runs. The order is required because the
+ * pivot table depends on existing film and actor ids.
  */
 class ActorFakerSeeder extends Seeder
 {
     /**
-     * I run the seeder: I create 10 actors with Faker and output a message to the console when done.
+     * Ten Actor records are created via the factory so that the actors table
+     * is seeded with Faker-generated data. A console message is output so
+     * that the operator is informed when the seeder has finished.
      */
     public function run(): void
     {
-        Actor::factory(10)->create();
+        Actor::factory()->count(10)->create();
         $this->command->info('Actors table seeded with 10 actors (ActorFakerSeeder).');
     }
 }

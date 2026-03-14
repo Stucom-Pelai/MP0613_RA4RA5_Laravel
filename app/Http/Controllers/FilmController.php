@@ -1,6 +1,16 @@
 <?php
 
 /**
+ * Film controller – HTTP actions for the films resource.
+ *
+ * This controller was adapted to use only Eloquent ORM (the Film model) for
+ * all database access. No JSON files or file-based data sources are used; every
+ * read and write is performed via Film:: queries and Film::create(), so that the
+ * application behaves exactly as before while relying on a consistent and
+ * maintainable data layer (Issue #10). The showFilmsDump method still returns
+ * JSON as an output format, but the data are loaded from the database via
+ * Eloquent, not from a JSON file.
+ *
  * @author Maxime Pol Marcet
  */
 
@@ -11,12 +21,18 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 /**
- * Film controller. I use the cinema database (films table) via the Film model.
+ * All film-related HTTP actions are handled here. Database queries are wrapped
+ * in handleDatabaseQuery so that connection failures are caught and the user
+ * is redirected with a friendly message instead of a raw exception.
  */
 class FilmController extends Controller
 {
     /**
-     * Run a database query; on connection failure redirect to home with a friendly message.
+     * The given callback is executed inside a try-catch so that any database
+     * exception is reported and the user is redirected to the home page with
+     * a database_error message. This is used by all public methods that perform
+     * Eloquent queries so that the application degrades gracefully when the
+     * database is unavailable.
      */
     private function handleDatabaseQuery(callable $callback): mixed
     {
@@ -32,7 +48,9 @@ class FilmController extends Controller
     }
 
     /**
-     * I fetch all films from the cinema database (films table).
+     * All films are fetched from the database via the Film model so that
+     * no JSON or file-based source is used. This method is used internally
+     * or by other components that need the full collection.
      */
     public static function readFilms()
     {
@@ -40,7 +58,9 @@ class FilmController extends Controller
     }
 
     /**
-     * I list all films ordered by year descending and return the films.list view.
+     * Films are retrieved via Eloquent (orderBy and get) and passed to the
+     * films.list view so that the list is always built from the database
+     * rather than from static or JSON data.
      */
     public function listFilms()
     {
@@ -52,7 +72,8 @@ class FilmController extends Controller
     }
 
     /**
-     * I list films with year before the given one (default 2000) and return the films.list view.
+     * Films with year before the given threshold are retrieved via Eloquent
+     * where() so that the classic films list is driven by the database.
      */
     public function listOldFilms(int|string|null $year = null)
     {
@@ -67,7 +88,9 @@ class FilmController extends Controller
     }
 
     /**
-     * I list films with year equal to or after the given one (default 2000) and return the films.list view.
+     * Films with year equal to or after the given threshold are retrieved
+     * via Eloquent where() so that the new releases list is driven by the
+     * database.
      */
     public function listNewFilms(int|string|null $year = null)
     {
@@ -82,7 +105,8 @@ class FilmController extends Controller
     }
 
     /**
-     * I list films for the given year, ordered by name, and return the films.list view.
+     * Films for the given year are retrieved via Eloquent where() and
+     * orderBy so that the list is built from the database only.
      */
     public function listFilmsByYear($year)
     {
@@ -94,7 +118,9 @@ class FilmController extends Controller
     }
 
     /**
-     * I list films for the given genre (case-insensitive comparison) and return the films.list view.
+     * Films for the given genre are retrieved via Eloquent whereRaw so that
+     * case-insensitive comparison is performed in the database and no JSON
+     * or file-based filtering is used.
      */
     public function listFilmsByGenre($genre)
     {
@@ -106,7 +132,8 @@ class FilmController extends Controller
     }
 
     /**
-     * I list all films ordered by year descending (chronological) and return the films.list view.
+     * Films are retrieved via Eloquent orderBy and get so that the
+     * chronological list is built from the database only.
      */
     public function sortFilms()
     {
@@ -118,7 +145,9 @@ class FilmController extends Controller
     }
 
     /**
-     * I get the total number of films and return the films.count view.
+     * The total number of films is obtained via Film::count() so that the
+     * count view is always fed from the database rather than from a static
+     * or JSON source.
      */
     public function countFilms()
     {
@@ -130,7 +159,9 @@ class FilmController extends Controller
     }
 
     /**
-     * I return all films as JSON (dump for debugging or API use).
+     * Films are loaded via Eloquent and then serialized to JSON for the
+     * response. The data source is the database (Film model), not a JSON
+     * file; only the output format is JSON for debugging or API use.
      */
     public function showFilmsDump(): JsonResponse|\Illuminate\Http\RedirectResponse
     {
@@ -142,7 +173,10 @@ class FilmController extends Controller
     }
 
     /**
-     * I handle creating a new film in the cinema database: validate, check it does not exist by name, and create the record.
+     * The request is validated and then a new Film record is created via
+     * Film::create() so that new data are stored in the database through
+     * Eloquent. Duplicate names are detected via an Eloquent exists() query
+     * so that no JSON or file-based check is used.
      */
     public function createFilm(Request $request)
     {
@@ -179,7 +213,9 @@ class FilmController extends Controller
     }
 
     /**
-     * I check whether a film with the given name already exists in the database (case-insensitive comparison).
+     * Existence of a film with the given name is checked via an Eloquent
+     * whereRaw and exists() query so that duplicate detection is performed
+     * against the database, not against a JSON file or static data.
      */
     public function isFilm($name): bool
     {
