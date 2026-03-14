@@ -1,9 +1,18 @@
 <?php
 
+/**
+ * @author Maxime Pol Marcet
+ */
+
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Http\Request;
 
 define('LARAVEL_START', microtime(true));
+
+// Ocultar avisos Deprecated en PHP 8.4+ para que la web no muestre mensajes en el navegador
+if (PHP_VERSION_ID >= 80400) {
+    error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
+}
 
 /*
 |--------------------------------------------------------------------------
