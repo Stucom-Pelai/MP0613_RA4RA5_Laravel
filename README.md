@@ -1,3 +1,38 @@
+# Movie App
+This Laravel-based application serves as a comprehensive system for managing a supermarket’s online presence.
+
+## Installation and Setup Instructions
+## Tech Stack
+- Laravel (PHP)
+- MySQL (via XAMPP)
+- Composer
+- Bootstrap (views)
+
+## Prerequisites
+- PHP 7.3+ (XAMPP recommended)
+- MySQL running (XAMPP)
+- Composer installed
+
+## Setup
+1. Clone the repository:
+
+```bash
+   git clone https://github.com/Stucom-Pelai/MP0613_RA4RA5_Laravel.git
+```
+
+2. Install Composer dependencies:
+
+```bash
+composer install
+```
+
+3. Start the Laravel development server 
+
+```bash
+php artisan serve
+```
+
+
 # **Analysis**
 
 ## **1. Routes**
